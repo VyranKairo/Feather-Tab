@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title id="appTitle">Feather Tab</title>
+        <style>
+            html,
+            body {
+                background-color: #121212 !important;
+                margin: 0;
+                padding: 0;
+                height: 100%;
+            }
+        </style>
+        <link
+            id="appIcon"
+            rel="icon"
+            type="image/webp"
+            href="assets/icon/feather.webp"
+        />
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <div class="clock-container">
+            <div class="day" id="day"></div>
+            <div class="date" id="date"></div>
+            <div class="time" id="time"></div>
+        </div>
+
+        <div class="hover-trigger bottom"></div>
+        <div class="topsite-container">
+            <div class="topsite-grid" id="topsiteGrid"></div>
+        </div>
+
+        <dialog id="addSiteModal" class="topsite-modal">
+            <form id="addSiteForm">
+                <h3>Add shortcut</h3>
+                <label>
+                    Title
+                    <input
+                        type="text"
+                        id="siteTitle"
+                        placeholder="e.g. Google"
+                        required
+                    />
+                </label>
+                <label>
+                    URL
+                    <input
+                        type="url"
+                        id="siteUrl"
+                        placeholder="https://..."
+                        required
+                    />
+                </label>
+                <div class="modal-actions">
+                    <button type="button" id="closeModalBtn">Cancel</button>
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+        </dialog>
+
+        <div class="searchbox-container">
+            <div class="search-container">
+                <div class="input-container">
+                    <div class="engine-picker-container">
+                        <button
+                            class="engine-picker-button"
+                            id="pickerBtn"
+                            aria-label="Select Search Engine"
+                        >
+                            <img
+                                id="currentEngineIcon"
+                                class="engine-icon"
+                                src="assets/icon/google.webp"
+                                alt="Google"
+                            />
+                        </button>
+
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="menu-item" data-engine="brave">
+                                <img
+                                    class="engine-icon"
+                                    src="assets/icon/brave.webp"
+                                    alt="Brave"
+                                />
+                                Brave
+                            </div>
+                            <div class="menu-item" data-engine="google">
+                                <img
+                                    class="engine-icon"
+                                    src="assets/icon/google.webp"
+                                    alt="Google"
+                                />
+                                Google
+                            </div>
+                            <div class="menu-item" data-engine="duckduckgo">
+                                <img
+                                    class="engine-icon"
+                                    src="assets/icon/duckduckgo.webp"
+                                    alt="DuckDuckGo"
+                                />
+                                DuckDuckGo
+                            </div>
+                            <div class="menu-item" data-engine="bing">
+                                <img
+                                    class="engine-icon"
+                                    src="assets/icon/bing.webp"
+                                    alt="Bing"
+                                />
+                                Bing
+                            </div>
+                        </div>
+                    </div>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search the web"
+                        tabindex="1"
+                    />
+
+                    <button
+                        class="search-button"
+                        id="searchBtn"
+                        aria-label="Submit Search"
+                    >
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="results-container"></div>
+            </div>
+        </div>
+
+        <button
+            class="settings-trigger-btn"
+            id="settingsTriggerBtn"
+            title="Settings"
+        >
+            ⚙
+        </button>
+
+        <dialog id="settingsModal" class="settings-modal">
+            <div class="settings-header">
+                <div class="settings-nav-tabs">
+                    <button class="tab-btn active" data-tab="tab-appearance">
+                        Appearance
+                    </button>
+                    <button class="tab-btn" data-tab="tab-search">
+                        Search Bar
+                    </button>
+                    <button class="tab-btn" data-tab="tab-clock">Clock</button>
+                    <button class="tab-btn" data-tab="tab-advanced">
+                        Advanced
+                    </button>
+                </div>
+                <button class="settings-close-btn" id="closeSettingsBtn">
+                    ✕
+                </button>
+            </div>
+
+            <div class="settings-body">
+                <!-- Tab: Appearance -->
+                <div class="tab-content active" id="tab-appearance">
+                    <div class="setting-row">
+                        <span>Theme Mode</span>
+                        <div class="segmented-control">
+                            <button id="themeDarkBtn" class="active">
+                                Dark
+                            </button>
+                            <button id="themeLightBtn">Light</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <span>Glassmorphism</span>
+                        <label class="toggle-switch">
+                            <input
+                                type="checkbox"
+                                id="frostedGlassToggle"
+                                checked
+                            />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <span>Change Wallpaper</span>
+                        <label class="setting-upload-btn">
+                            Upload Custom
+                            <input
+                                type="file"
+                                id="bgUploadInput"
+                                accept="image/*"
+                                hidden
+                            />
+                        </label>
+                    </div>
+
+                    <div class="setting-row" id="resetBgRow">
+                        <span>Reset Wallpaper</span>
+                        <button id="resetBgBtn" class="setting-action-btn">
+                            Reset Default
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab: Search Bar -->
+                <div class="tab-content" id="tab-search">
+                    <div class="setting-row vertical-setting">
+                        <span>Search Text Color</span>
+                        <div class="custom-color-picker">
+                            <div
+                                class="color-swatches"
+                                id="searchColorSwatches"
+                            >
+                                <button
+                                    class="swatch active"
+                                    data-color="#ffffff"
+                                    style="background: #ffffff"
+                                    title="White"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#1a1a1a"
+                                    style="background: #1a1a1a"
+                                    title="Dark Gray"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#38dbf8"
+                                    style="background: #38dbf8"
+                                    title="Cyan"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#ff7675"
+                                    style="background: #ff7675"
+                                    title="Coral"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#fdcb6e"
+                                    style="background: #fdcb6e"
+                                    title="Gold"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#a29bfe"
+                                    style="background: #a29bfe"
+                                    title="Lavender"
+                                ></button>
+                            </div>
+                            <div class="hex-input-wrapper">
+                                <span class="hash-symbol">#</span>
+                                <input
+                                    type="text"
+                                    id="searchHexInput"
+                                    maxlength="6"
+                                    value="FFFFFF"
+                                    placeholder="FFFFFF"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <span>Search Box Transparency</span>
+                        <input
+                            type="range"
+                            id="searchBgOpacityInput"
+                            min="0"
+                            max="0.9"
+                            step="0.05"
+                            value="0.4"
+                        />
+                    </div>
+                </div>
+
+                <!-- Tab: Clock -->
+                <div class="tab-content" id="tab-clock">
+                    <div class="setting-row vertical-setting">
+                        <span>Clock Text Color</span>
+                        <div class="custom-color-picker">
+                            <div class="color-swatches" id="clockColorSwatches">
+                                <button
+                                    class="swatch active"
+                                    data-color="#ffffff"
+                                    style="background: #ffffff"
+                                    title="White"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#1a1a1a"
+                                    style="background: #1a1a1a"
+                                    title="Dark Gray"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#38dbf8"
+                                    style="background: #38dbf8"
+                                    title="Cyan"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#ff7675"
+                                    style="background: #ff7675"
+                                    title="Coral"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#fdcb6e"
+                                    style="background: #fdcb6e"
+                                    title="Gold"
+                                ></button>
+                                <button
+                                    class="swatch"
+                                    data-color="#a29bfe"
+                                    style="background: #a29bfe"
+                                    title="Lavender"
+                                ></button>
+                            </div>
+                            <div class="hex-input-wrapper">
+                                <span class="hash-symbol">#</span>
+                                <input
+                                    type="text"
+                                    id="clockHexInput"
+                                    maxlength="6"
+                                    value="FFFFFF"
+                                    placeholder="FFFFFF"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <span>Clock Opacity</span>
+                        <input
+                            type="range"
+                            id="clockOpacityInput"
+                            min="0.1"
+                            max="1"
+                            step="0.05"
+                            value="1"
+                        />
+                    </div>
+                </div>
+
+                <!-- Tab: Advanced -->
+                <div class="tab-content" id="tab-advanced">
+                    <div class="setting-row">
+                        <span>Tab Title</span>
+                        <input
+                            type="text"
+                            id="tabTitleInput"
+                            placeholder="Feather Tab"
+                            class="setting-text-input"
+                        />
+                    </div>
+
+                    <div class="setting-row">
+                        <span>Favicon URL / Upload</span>
+                        <div class="advanced-icon-controls">
+                            <input
+                                type="text"
+                                id="tabIconUrlInput"
+                                placeholder="https://... or upload"
+                                class="setting-text-input"
+                            />
+                            <label class="setting-upload-btn">
+                                Upload
+                                <input
+                                    type="file"
+                                    id="tabIconFileInput"
+                                    accept="image/*"
+                                    hidden
+                                />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <span>Reset Tab Info</span>
+                        <button id="resetTabInfoBtn" class="setting-action-btn">
+                            Reset Default
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </dialog>
+
+        <!-- GIF Confirmation Modal -->
+        <dialog id="gifConfirmModal" class="topsite-modal">
+            <h3>GIF Wallpaper Notice</h3>
+            <p style="margin-top: 10px; font-size: 13px; color: #ccc">
+                Setting a GIF wallpaper may take extra time to process and
+                impact performance. Do you wish to continue?
+            </p>
+            <div class="modal-actions">
+                <button type="button" id="cancelGifBtn">Cancel</button>
+                <button type="button" id="confirmGifBtn">OK</button>
+            </div>
+        </dialog>
+
+        <!-- Notification Toast Box -->
+        <div id="wallpaperToast" class="wallpaper-toast"></div>
+
+        <script src="js/core/startup.js"></script>
+        <script src="js/core/settings.js"></script>
+        <script src="js/core/search.js"></script>
+        <script src="js/core/topsite.js"></script>
+        <script src="js/widgets/clock.js"></script>
+    </body>
+</html>
