@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Feather Tab",
+  "version": "1.0",
+  "description": "A lightweight new tab.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": ["storage"],
+  "icons": {
+    "16": "assets/icon/feather.png",
+    "48": "assets/icon/feather.png",
+    "128": "assets/icon/feather.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/icon/feather.png",
+      "32": "assets/icon/feather.png",
+      "48": "assets/icon/feather.png"
+    }
+  }
+}
